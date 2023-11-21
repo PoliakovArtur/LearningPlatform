@@ -1,6 +1,6 @@
 package servletTests;
 
-import db.Data;
+import db.Entities;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class TestTeacherServlet {
-    private final static List<Teacher> teachers = Data.getTeachers();
+    private final static List<Teacher> teachers = Entities.getTeachers();
     private static TeacherService TeacherService;
     private static TeachersServlet teachersServlet;
     private static HttpServletRequest request;
@@ -46,7 +46,7 @@ public class TestTeacherServlet {
 
     @Test
     public void testGet() throws IOException {
-        for(Teacher Teacher : teachers) {
+        for (Teacher Teacher : teachers) {
             when(response.getWriter()).thenReturn(new PrintWriter(RESPONSE_PATH));
             Long id = Teacher.getId();
             when(TeacherService.findById(id)).thenReturn(teachers.get(id.intValue() - 1));
@@ -57,6 +57,7 @@ public class TestTeacherServlet {
             assertEquals(expected, actual);
         }
     }
+
     @Test
     public void testPost() throws IOException, ServletException {
         Teacher Teacher = new Teacher(30L, "Картошин Виктор", 40000L, 33);
@@ -71,7 +72,7 @@ public class TestTeacherServlet {
 
     @Test
     public void testPut() throws IOException, ServletException {
-        for(Teacher Teacher : teachers) {
+        for (Teacher Teacher : teachers) {
             Long id = Teacher.getId();
             when(request.getPathInfo()).thenReturn("/" + id);
             BufferedReader reader = mock(BufferedReader.class);
@@ -85,7 +86,7 @@ public class TestTeacherServlet {
 
     @Test
     public void testDelete() throws ServletException, IOException {
-        for(Teacher Teacher : teachers) {
+        for (Teacher Teacher : teachers) {
             Long id = Teacher.getId();
             when(request.getPathInfo()).thenReturn("/" + id);
             teachersServlet.doDelete(request, response);
@@ -96,7 +97,7 @@ public class TestTeacherServlet {
     private String getJsonTeachers() {
         JSONObject outGoingDTO = new JSONObject();
         JSONArray jsonTeachers = new JSONArray();
-        for(Teacher Teacher : teachers) {
+        for (Teacher Teacher : teachers) {
             jsonTeachers.add(getJsonObject(Teacher));
         }
         outGoingDTO.put("teachers", jsonTeachers);

@@ -14,7 +14,7 @@ public class CourseDTOMapper {
 
     public static Course map(JSONObject incomingDto) {
         Course course = new Course();
-        if(incomingDto.containsKey("id")) {
+        if (incomingDto.containsKey("id")) {
             Long id = (Long) incomingDto.get("id");
             course.setId(id);
         }
@@ -23,7 +23,7 @@ public class CourseDTOMapper {
         CourseType type = CourseType.valueOf((String) incomingDto.get("type"));
         Long price = (Long) incomingDto.get("price");
         Long teacherId = (Long) incomingDto.get("teacher_id");
-        if(name == null || description == null || price == null || teacherId == null) {
+        if (name == null || description == null || price == null || teacherId == null) {
             throw new NullPointerException("not enough keys for course");
         }
         course.setType(type);
@@ -44,14 +44,14 @@ public class CourseDTOMapper {
         outGoingDTO.put("type", course.getType().toString());
         outGoingDTO.put("price", course.getPrice());
         Teacher teacher = course.getTeacher();
-        if(teacher != null) {
+        if (teacher != null) {
             JSONObject jsonTeacher = TeacherDTOMapper.map(teacher);
             outGoingDTO.put("teacher", jsonTeacher);
         }
         List<Student> students = course.getStudents();
-        if(students != null) {
+        if (students != null) {
             JSONArray jsonStudents = new JSONArray();
-            for(Student student : students) {
+            for (Student student : students) {
                 JSONObject jsonStudent = StudentDTOMapper.map(student);
                 jsonStudents.add(jsonStudent);
             }
@@ -63,7 +63,7 @@ public class CourseDTOMapper {
     public static JSONObject mapAll(List<Course> courses) {
         JSONObject outGoingDTO = new JSONObject();
         JSONArray jsonCourses = new JSONArray();
-        for(Course course : courses) {
+        for (Course course : courses) {
             JSONObject jsonCourse = map(course);
             jsonCourses.add(jsonCourse);
         }

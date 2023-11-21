@@ -4,13 +4,12 @@ import org.junit.jupiter.api.Test;
 import repository.impl.*;
 import service.Service;
 import service.impl.*;
-
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static db.Data.*;
+import static db.Entities.*;
 
 public class TestServices {
     private static CourseService courseService;
@@ -41,7 +40,7 @@ public class TestServices {
         testFindById(courseService, courseRepository, new Course());
     }
 
-    private static <T>  void testFindById(Service<T,Long> service, Repository<T, Long> tkRepository, T entity) {
+    private static <T> void testFindById(Service<T, Long> service, Repository<T, Long> tkRepository, T entity) {
         when(tkRepository.findById(1L)).thenReturn(Optional.of(entity));
         when(tkRepository.findById(2L)).thenReturn(Optional.empty());
         T findedEntity = service.findById(1L);
@@ -56,7 +55,7 @@ public class TestServices {
         testDeleteById(courseService, courseRepository, 1L, 2L, new Course());
     }
 
-    private static <T,K>  void testDeleteById(Service<T,K> service, Repository<T, K> tkRepository, K existKey, K notExistKey, T entity) {
+    private static <T, K> void testDeleteById(Service<T, K> service, Repository<T, K> tkRepository, K existKey, K notExistKey, T entity) {
         when(tkRepository.deleteById(existKey)).thenReturn(true);
         when(tkRepository.deleteById(notExistKey)).thenReturn(false);
         assertTrue(service.deleteById(existKey));
@@ -71,7 +70,7 @@ public class TestServices {
         testFindAll(subscriptionService, subscriptionRepository, getSubscriptions());
     }
 
-    private <T,K> void testFindAll(Service<T,K> service, Repository<T, K> tkRepository, List<T> entities) {
+    private <T, K> void testFindAll(Service<T, K> service, Repository<T, K> tkRepository, List<T> entities) {
         when(tkRepository.findAll()).thenReturn(entities);
         assertEquals(entities, service.findAll());
     }
@@ -85,7 +84,7 @@ public class TestServices {
 
     @Test
     public void testSaveCourse() {
-        Course fullCourse =  getCourses().get(0);
+        Course fullCourse = getCourses().get(0);
         Teacher teacher = fullCourse.getTeacher();
         when(teacherRepository.findById(teacher.getId())).thenReturn(Optional.of(teacher));
         Course notFullCourse = new Course(null, CourseType.DESIGN, null, null, null);
@@ -110,7 +109,7 @@ public class TestServices {
         testSave(subscriptionService, subscriptionRepository, new Subscription(), getSubscriptions().get(0), notFullSubscription);
     }
 
-    private <T,K> void testSave(Service<T,K> service, Repository<T, K> repository, T emptyEntity, T fullEntity, T notFullEntity) {
+    private <T, K> void testSave(Service<T, K> service, Repository<T, K> repository, T emptyEntity, T fullEntity, T notFullEntity) {
         assertThrows(ServiceException.class, () -> service.save(emptyEntity));
         assertThrows(ServiceException.class, () -> service.save(notFullEntity));
         service.save(fullEntity);
@@ -154,11 +153,10 @@ public class TestServices {
         testUpdate(subscriptionService, subscriptionRepository, withoutId, withoutColumns, valid);
     }
 
-    private <T,K> void testUpdate(Service<T,K> service, Repository<T,K> repository, T withoutId, T withoutColumns, T valid) {
+    private <T, K> void testUpdate(Service<T, K> service, Repository<T, K> repository, T withoutId, T withoutColumns, T valid) {
         assertThrows(ServiceException.class, () -> service.update(withoutId));
         assertThrows(ServiceException.class, () -> service.update(withoutColumns));
         service.update(valid);
         verify(repository).update(valid);
     }
-
 }

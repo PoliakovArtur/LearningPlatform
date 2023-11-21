@@ -53,7 +53,7 @@ class SQLQueryBuilder {
         int pairsCount = cAndVPairs.length >> 1;
         String[] pairs = new String[pairsCount];
         String currentPair = "";
-        for (int i = 0; i < pairsCount; i++){
+        for (int i = 0; i < pairsCount; i++) {
             String column = columnQuotes(cAndVPairs[i << 1]);
             String value = valueQuotes(cAndVPairs[(i << 1) + 1]);
             pairs[i] = column + " = " + value;
@@ -111,10 +111,10 @@ class SQLQueryBuilder {
     }
 
     private static void checkArgsPairs(String[] pairs) {
-        if((pairs.length & 1) == 1) {
+        if ((pairs.length & 1) == 1) {
             throw new IllegalArgumentException("must be even arguments count");
         }
-        if(pairs.length < 2){
+        if (pairs.length < 2) {
             throw new IllegalArgumentException("must be at least one arguments pair");
         }
     }

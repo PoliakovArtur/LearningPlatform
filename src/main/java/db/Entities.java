@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public final class Data {
-    private Data() {}
+public final class Entities {
+    private Entities() {}
 
-    private static List<Teacher> teachers;
-    private static List<Course> courses;
-    private static List<Student> students;
-    private static List<Subscription> subscriptions;
+    static List<Teacher> teachers;
+    static List<Course> courses;
+    static List<Student> students;
+    static List<Subscription> subscriptions;
 
     public static List<Teacher> getTeachers() {
         if (teachers == null) setTeachers();

@@ -1,6 +1,6 @@
 package servletTests;
 
-import db.Data;
+import db.Entities;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class TestStudentServlet {
-    private final static List<Student> students = Data.getStudents();
+    private final static List<Student> students = Entities.getStudents();
     private static StudentService studentService;
     private static StudentsServlet studentsServlet;
     private static HttpServletRequest request;
@@ -47,7 +47,7 @@ public class TestStudentServlet {
 
     @Test
     public void testGet() throws IOException {
-        for(Student student : students) {
+        for (Student student : students) {
             when(response.getWriter()).thenReturn(new PrintWriter(RESPONSE_PATH));
             Long id = student.getId();
             when(studentService.findById(id)).thenReturn(students.get(id.intValue() - 1));
@@ -58,6 +58,7 @@ public class TestStudentServlet {
             assertEquals(expected, actual);
         }
     }
+
     @Test
     public void testPost() throws IOException, ServletException {
         Student student = new Student(30L, "Картошин Виктор", 40, Date.valueOf("2022-10-13"));
@@ -72,7 +73,7 @@ public class TestStudentServlet {
 
     @Test
     public void testPut() throws IOException, ServletException {
-        for(Student student : students) {
+        for (Student student : students) {
             Long id = student.getId();
             when(request.getPathInfo()).thenReturn("/" + id);
             BufferedReader reader = mock(BufferedReader.class);
@@ -86,7 +87,7 @@ public class TestStudentServlet {
 
     @Test
     public void testDelete() throws ServletException, IOException {
-        for(Student student : students) {
+        for (Student student : students) {
             Long id = student.getId();
             when(request.getPathInfo()).thenReturn("/" + id);
             studentsServlet.doDelete(request, response);
@@ -97,7 +98,7 @@ public class TestStudentServlet {
     private String getJsonStudents() {
         JSONObject outGoingDTO = new JSONObject();
         JSONArray jsonStudents = new JSONArray();
-        for(Student student : students) {
+        for (Student student : students) {
             jsonStudents.add(getJsonObject(student));
         }
         outGoingDTO.put("students", jsonStudents);

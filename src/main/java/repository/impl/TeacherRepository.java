@@ -3,6 +3,7 @@ package repository.impl;
 import db.ConnectionManager;
 import model.Teacher;
 import repository.mapper.TeacherRSMapper;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,15 +18,15 @@ public class TeacherRepository implements Repository<Teacher, Long> {
 
     @Override
     public Optional<Teacher> findById(Long id) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             builder
                     .selectAll("teachers")
-                    .join("LEFT","courses", "teacher_id", "teachers", "id")
+                    .join("LEFT", "courses", "teacher_id", "teachers", "id")
                     .where("teachers.id", id.toString());
             String query = builder.getQuery();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            return Optional.of(mapper.map(resultSet));
+            return Optional.ofNullable(mapper.map(resultSet));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -33,7 +34,7 @@ public class TeacherRepository implements Repository<Teacher, Long> {
 
     @Override
     public boolean deleteById(Long id) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             builder
                     .delete("teachers")
                     .where("id", id.toString());
@@ -41,18 +42,17 @@ public class TeacherRepository implements Repository<Teacher, Long> {
             Statement statement = connection.createStatement();
             int deleteRows = statement.executeUpdate(query);
             return deleteRows > 0;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public List<Teacher> findAll() {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             builder
                     .selectAll("teachers")
-                    .join("LEFT","courses", "teacher_id", "teachers", "id");
+                    .join("LEFT", "courses", "teacher_id", "teachers", "id");
             String query = builder.getQuery();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -64,7 +64,7 @@ public class TeacherRepository implements Repository<Teacher, Long> {
 
     @Override
     public Teacher save(Teacher teacher) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             String name = teacher.getName();
             String salary = teacher.getSalary().toString();
             String age = teacher.getAge().toString();
@@ -81,17 +81,17 @@ public class TeacherRepository implements Repository<Teacher, Long> {
 
     @Override
     public Teacher update(Teacher teacher) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             List<String> updatedColumns = new ArrayList<>();
-            if(teacher.getName() != null) {
+            if (teacher.getName() != null) {
                 updatedColumns.add("name");
                 updatedColumns.add(teacher.getName());
             }
-            if(teacher.getSalary() != null) {
+            if (teacher.getSalary() != null) {
                 updatedColumns.add("salary");
                 updatedColumns.add(teacher.getSalary().toString());
             }
-            if(teacher.getAge() != null) {
+            if (teacher.getAge() != null) {
                 updatedColumns.add("age");
                 updatedColumns.add(teacher.getAge().toString());
             }

@@ -18,14 +18,14 @@ public class SubscriptionRepository implements Repository<Subscription, Map.Entr
 
     @Override
     public Optional<Subscription> findById(Map.Entry<Long, Long> id) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             String studentId = id.getKey().toString();
             String courseId = id.getValue().toString();
             builder
                     .selectAll("students")
-                    .join("INNER","subscriptions", "student_id", "students", "id")
-                    .join("INNER","courses", "id", "subscriptions", "course_id")
-                    .join("LEFT","teachers", "id", "courses", "teacher_id")
+                    .join("INNER", "subscriptions", "student_id", "students", "id")
+                    .join("INNER", "courses", "id", "subscriptions", "course_id")
+                    .join("LEFT", "teachers", "id", "courses", "teacher_id")
                     .where("subscriptions.student_id", studentId)
                     .and("subscriptions.course_id", courseId);
             String query = builder.getQuery();
@@ -39,7 +39,7 @@ public class SubscriptionRepository implements Repository<Subscription, Map.Entr
 
     @Override
     public boolean deleteById(Map.Entry<Long, Long> id) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             String studentId = id.getKey().toString();
             String courseId = id.getValue().toString();
             builder
@@ -57,12 +57,12 @@ public class SubscriptionRepository implements Repository<Subscription, Map.Entr
 
     @Override
     public List<Subscription> findAll() {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             builder
                     .selectAll("students")
-                    .join("INNER","subscriptions", "student_id", "students", "id")
-                    .join("INNER","courses", "id", "subscriptions", "course_id")
-                    .join("LEFT","teachers", "id", "courses", "teacher_id");
+                    .join("INNER", "subscriptions", "student_id", "students", "id")
+                    .join("INNER", "courses", "id", "subscriptions", "course_id")
+                    .join("LEFT", "teachers", "id", "courses", "teacher_id");
             String query = builder.getQuery();
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
@@ -74,7 +74,7 @@ public class SubscriptionRepository implements Repository<Subscription, Map.Entr
 
     @Override
     public Subscription save(Subscription subscription) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             String studentId = subscription.getStudent().getId().toString();
             String courseId = subscription.getCourse().getId().toString();
             String subscriptionDate = subscription.getSubscriptionDate().toString();
@@ -91,7 +91,7 @@ public class SubscriptionRepository implements Repository<Subscription, Map.Entr
 
     @Override
     public Subscription update(Subscription subscription) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             String studentId = subscription.getStudent().getId().toString();
             String courseId = subscription.getCourse().getId().toString();
             String subscriptionDate = subscription.getSubscriptionDate().toString();

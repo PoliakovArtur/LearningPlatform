@@ -1,12 +1,9 @@
 package service.impl;
 
 import model.Student;
-import model.Subscription;
 import repository.impl.StudentRepository;
 import service.Service;
-
 import java.util.List;
-import java.util.Optional;
 
 public class StudentService implements Service<Student, Long> {
 
@@ -33,7 +30,7 @@ public class StudentService implements Service<Student, Long> {
 
     @Override
     public Student save(Student student) {
-        if(student == null || student.getName() == null || student.getAge() == null || student.getRegistrationDate() == null) {
+        if (student == null || student.getName() == null || student.getAge() == null || student.getRegistrationDate() == null) {
             throw new ServiceException("not enough columns to save student");
         }
         return repository.save(student);
@@ -41,8 +38,8 @@ public class StudentService implements Service<Student, Long> {
 
     @Override
     public Student update(Student student) {
-        if(student.getId() == null) throw new ServiceException("need to set id to update student");
-        if(student.getName() == null
+        if (student.getId() == null) throw new ServiceException("need to set id to update student");
+        if (student.getName() == null
                 && student.getAge() == null
                 && student.getRegistrationDate() == null) {
             throw new ServiceException("need to set at least one column to update student");

@@ -3,8 +3,6 @@ package service.impl;
 import model.Course;
 import model.Student;
 import model.Subscription;
-import repository.impl.CourseRepository;
-import repository.impl.StudentRepository;
 import repository.impl.SubscriptionRepository;
 import service.Service;
 
@@ -42,10 +40,10 @@ public class SubscriptionService implements Service<Subscription, Map.Entry<Long
         Student student = subscription.getStudent();
         Course course = subscription.getCourse();
 
-        if(student == null || course == null
-        || subscription.getSubscriptionDate() == null
-        || student.getId() == null
-        || course.getId() == null) {
+        if (student == null || course == null
+                || subscription.getSubscriptionDate() == null
+                || student.getId() == null
+                || course.getId() == null) {
             throw new ServiceException("not enough columns to save subscription");
         }
         studentService.findById(student.getId());
@@ -57,11 +55,12 @@ public class SubscriptionService implements Service<Subscription, Map.Entry<Long
     public Subscription update(Subscription subscription) {
         Student student = subscription.getStudent();
         Course course = subscription.getCourse();
-        if(student == null || course == null
-        || student.getId() == null || course.getId() == null) {
+        if (student == null || course == null
+                || student.getId() == null || course.getId() == null) {
             throw new ServiceException("can't update subscriptions without course_id and student_id");
         }
-        if(student.getRegistrationDate() == null) throw new ServiceException("need to set at least one column to update teacher");
+        if (student.getRegistrationDate() == null)
+            throw new ServiceException("need to set at least one column to update teacher");
         return subscriptionRepository.update(subscription);
     }
 }

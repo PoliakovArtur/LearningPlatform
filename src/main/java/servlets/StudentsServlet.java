@@ -8,7 +8,7 @@ import model.Student;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import service.Service;
+import service.impl.ServiceException;
 import service.impl.StudentService;
 import servlets.mapper.StudentDTOMapper;
 import java.io.BufferedReader;
@@ -30,7 +30,7 @@ public class StudentsServlet extends HttpServlet {
         String info = req.getPathInfo();
         String response = "";
         try {
-            if(info == null || info.equals("/")) {
+            if (info == null || info.equals("/")) {
                 List<Student> students = service.findAll();
                 JSONObject outGoingDTO = StudentDTOMapper.mapAll(students);
                 response = outGoingDTO.toJSONString();
@@ -40,8 +40,7 @@ public class StudentsServlet extends HttpServlet {
                 JSONObject object = StudentDTOMapper.map(student);
                 response = object.toJSONString();
             }
-        } catch (NumberFormatException | NullPointerException exception) {
-            exception.printStackTrace();
+        } catch (NumberFormatException | ServiceException exception) {
             resp.sendError(404);
         }
         resp.setContentType("text/html");
@@ -55,14 +54,14 @@ public class StudentsServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String info = req.getPathInfo();
-        if(info == null || info.equals("/")) {
+        if (info == null || info.equals("/")) {
             try {
                 BufferedReader reader = req.getReader();
                 String jsonString = reader.lines().reduce(String::concat).get();
                 JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonString);
                 Student student = StudentDTOMapper.map(jsonObject);
                 service.save(student);
-            } catch (NullPointerException | ParseException exception) {
+            } catch (ServiceException | ParseException exception) {
                 resp.sendError(400);
             }
         } else {
@@ -73,14 +72,14 @@ public class StudentsServlet extends HttpServlet {
     @Override
     public void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String info = req.getPathInfo();
-        if(info != null && info.matches("/\\d+")) {
+        if (info != null && info.matches("/\\d+")) {
             try {
                 BufferedReader reader = req.getReader();
                 String jsonString = reader.lines().reduce(String::concat).get();
                 JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonString);
                 Student student = StudentDTOMapper.map(jsonObject);
                 service.update(student);
-            } catch (NullPointerException | ParseException ex) {
+            } catch (ServiceException | ParseException ex) {
                 resp.sendError(400);
             }
         } else {
@@ -91,11 +90,11 @@ public class StudentsServlet extends HttpServlet {
     @Override
     public void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String info = req.getPathInfo();
-        if(info != null && info.matches("/\\d+")) {
+        if (info != null && info.matches("/\\d+")) {
             try {
                 Long id = Long.parseLong(info.substring(1));
                 service.deleteById(id);
-            } catch (NullPointerException | NumberFormatException ex) {
+            } catch (ServiceException | NumberFormatException ex) {
                 resp.sendError(400);
             }
         } else {

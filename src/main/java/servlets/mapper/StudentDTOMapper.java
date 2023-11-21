@@ -11,16 +11,17 @@ import java.util.Map;
 
 public class StudentDTOMapper {
 
-    private StudentDTOMapper() {}
+    private StudentDTOMapper() {
+    }
 
     public static Student map(JSONObject incomingDTO) {
         Student student = new Student();
-        if(incomingDTO.containsKey("id")) {
+        if (incomingDTO.containsKey("id")) {
             student.setId((Long) incomingDTO.get("id"));
         }
         String name = (String) incomingDTO.get("name");
         Integer age = null;
-        if(incomingDTO.containsKey("age")) {
+        if (incomingDTO.containsKey("age")) {
             age = ((Long) incomingDTO.get("age")).intValue();
         }
         Date registrationDate = Date.valueOf((String) incomingDTO.get("registration_date"));
@@ -37,9 +38,9 @@ public class StudentDTOMapper {
         outGoingDTO.put("age", student.getAge());
         outGoingDTO.put("registration_date", student.getRegistrationDate().toString());
         List<Subscription> subscriptions = student.getSubscriptions();
-        if(subscriptions != null) {
+        if (subscriptions != null) {
             JSONArray jsonSubscriptions = new JSONArray();
-            for(Subscription subscription : subscriptions) {
+            for (Subscription subscription : subscriptions) {
                 JSONObject jsonSubscription = SubscriptionDTOMapper.map(subscription);
                 jsonSubscriptions.add(jsonSubscription);
             }
@@ -51,7 +52,7 @@ public class StudentDTOMapper {
     public static JSONObject mapAll(List<Student> students) {
         JSONObject outGoingDTO = new JSONObject();
         JSONArray jsonStudents = new JSONArray();
-        for(Student student : students) {
+        for (Student student : students) {
             JSONObject jsonStudent = map(student);
             jsonStudents.add(jsonStudent);
         }

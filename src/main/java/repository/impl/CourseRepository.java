@@ -24,17 +24,17 @@ public class CourseRepository implements Repository<Course, Long> {
 
     @Override
     public Optional<Course> findById(Long id) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             builder
                     .selectAll("teachers")
                     .join("RIGHT", "courses", "teacher_id", "teachers", "id")
                     .join("LEFT", "subscriptions", "course_id", "courses", "id")
-                    .join("LEFT","students", "id", "subscriptions", "student_id")
+                    .join("LEFT", "students", "id", "subscriptions", "student_id")
                     .where("courses.id", id.toString());
             String query = builder.getQuery();
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
-            return Optional.of(mapper.map(set));
+            return Optional.ofNullable(mapper.map(set));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -42,7 +42,7 @@ public class CourseRepository implements Repository<Course, Long> {
 
     @Override
     public boolean deleteById(Long id) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             builder
                     .delete("courses")
                     .where("id", id.toString());
@@ -57,12 +57,12 @@ public class CourseRepository implements Repository<Course, Long> {
 
     @Override
     public List<Course> findAll() {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             builder
                     .selectAll("teachers")
-                    .join("RIGHT","courses", "teacher_id", "teachers", "id")
-                    .join("LEFT","subscriptions", "course_id", "courses", "id")
-                    .join("LEFT","students", "id", "subscriptions", "student_id");
+                    .join("RIGHT", "courses", "teacher_id", "teachers", "id")
+                    .join("LEFT", "subscriptions", "course_id", "courses", "id")
+                    .join("LEFT", "students", "id", "subscriptions", "student_id");
             String query = builder.getQuery();
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
@@ -74,7 +74,7 @@ public class CourseRepository implements Repository<Course, Long> {
 
     @Override
     public Course save(Course course) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             String name = course.getName();
             String type = course.getType().toString();
             String description = course.getDescription();
@@ -98,25 +98,25 @@ public class CourseRepository implements Repository<Course, Long> {
 
     @Override
     public Course update(Course course) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             List<String> updatedColumns = new ArrayList<>();
-            if(course.getName() != null) {
+            if (course.getName() != null) {
                 updatedColumns.add("name");
                 updatedColumns.add(course.getName());
             }
-            if(course.getType() != null) {
+            if (course.getType() != null) {
                 updatedColumns.add("type");
                 updatedColumns.add(course.getType().toString());
             }
-            if(course.getDescription() != null) {
+            if (course.getDescription() != null) {
                 updatedColumns.add("description");
                 updatedColumns.add(course.getDescription());
             }
-            if(course.getPrice() != null) {
+            if (course.getPrice() != null) {
                 updatedColumns.add("price");
                 updatedColumns.add(course.getPrice().toString());
             }
-            if(course.getTeacher() != null) {
+            if (course.getTeacher() != null) {
                 updatedColumns.add("teacher_id");
                 updatedColumns.add(course.getTeacher().getId().toString());
             }

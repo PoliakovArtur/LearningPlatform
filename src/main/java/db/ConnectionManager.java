@@ -18,7 +18,7 @@ public final class ConnectionManager {
         return DriverManager.getConnection(url, user, password);
     }
 
-    public static void readProperties() {
+    static void readProperties() {
         String propertiesPath = "src/main/resources/db.properties";
         try(FileInputStream inputStream = new FileInputStream(propertiesPath)) {
             Properties properties = new Properties();

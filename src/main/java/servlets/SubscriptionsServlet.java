@@ -8,8 +8,10 @@ import model.Subscription;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import service.impl.ServiceException;
 import service.impl.SubscriptionService;
 import servlets.mapper.SubscriptionDTOMapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
@@ -27,7 +29,7 @@ public class SubscriptionsServlet extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String info = req.getPathInfo();
         String response = "";
-        if(info == null || info.equals("/")) {
+        if (info == null || info.equals("/")) {
             List<Subscription> Subscriptions = service.findAll();
             JSONObject outGoingDTO = SubscriptionDTOMapper.mapAll(Subscriptions);
             response = outGoingDTO.toJSONString();
@@ -45,14 +47,14 @@ public class SubscriptionsServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String info = req.getPathInfo();
-        if(info == null || info.equals("/")) {
+        if (info == null || info.equals("/")) {
             try {
                 BufferedReader reader = req.getReader();
                 String jsonString = reader.lines().reduce(String::concat).get();
                 JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonString);
                 Subscription Subscription = SubscriptionDTOMapper.map(jsonObject);
                 service.save(Subscription);
-            } catch (NullPointerException | ParseException exception) {
+            } catch (ServiceException | ParseException exception) {
                 resp.sendError(400);
             }
         } else {

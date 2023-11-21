@@ -23,8 +23,8 @@ public class StudentRSMapper implements ResultSetMapper<Student> {
             List<Subscription> subscriptions = null;
             while (resultSet.next()) {
                 Long id = resultSet.getLong(1);
-                if(id > prevId) {
-                    if(student != null) {
+                if (id > prevId) {
+                    if (student != null) {
                         student.setSubscriptions(subscriptions);
                     }
                     subscriptions = new ArrayList<>();
@@ -37,7 +37,7 @@ public class StudentRSMapper implements ResultSetMapper<Student> {
                     prevId = id;
                 }
                 long courseId = resultSet.getLong(8);
-                if(courseId > 0) {
+                if (courseId > 0) {
                     Subscription subscription = new Subscription();
                     subscription.setSubscriptionDate(resultSet.getDate(7)); //skip student_id and course_id;
                     Course course = new Course();
@@ -59,7 +59,7 @@ public class StudentRSMapper implements ResultSetMapper<Student> {
                     subscriptions.add(subscription);
                 }
             }
-            if(student != null) student.setSubscriptions(subscriptions);
+            if (student != null) student.setSubscriptions(subscriptions);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

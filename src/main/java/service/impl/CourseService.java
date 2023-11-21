@@ -1,9 +1,7 @@
 package service.impl;
 
 import model.Course;
-import model.Teacher;
 import repository.impl.CourseRepository;
-import repository.impl.TeacherRepository;
 import service.Service;
 
 import java.util.List;
@@ -34,7 +32,7 @@ public class CourseService implements Service<Course, Long> {
 
     @Override
     public Course save(Course course) {
-        if(course.getName() == null ||
+        if (course.getName() == null ||
                 course.getPrice() == null ||
                 course.getDescription() == null ||
                 course.getType() == null ||
@@ -47,8 +45,8 @@ public class CourseService implements Service<Course, Long> {
 
     @Override
     public Course update(Course course) {
-        if(course.getId() == null) throw new ServiceException("need to set id to update course");
-        if(course.getName() == null &&
+        if (course.getId() == null) throw new ServiceException("need to set id to update course");
+        if (course.getName() == null &&
                 course.getPrice() == null &&
                 course.getDescription() == null &&
                 course.getType() == null &&

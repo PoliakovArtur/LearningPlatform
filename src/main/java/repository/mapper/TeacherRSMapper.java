@@ -23,8 +23,8 @@ public class TeacherRSMapper implements ResultSetMapper<Teacher> {
             Long prevId = -1L;
             while (resultSet.next()) {
                 Long id = resultSet.getLong(1);
-                if(prevId < id) {
-                    if(teacher != null) teacher.setCourses(courses);
+                if (prevId < id) {
+                    if (teacher != null) teacher.setCourses(courses);
                     courses = new ArrayList<>();
                     teacher = new Teacher();
                     teacher.setId(id);
@@ -36,7 +36,7 @@ public class TeacherRSMapper implements ResultSetMapper<Teacher> {
                 }
                 Course course = new Course();
                 long courseId = resultSet.getLong(5);
-                if(courseId > 0) {
+                if (courseId > 0) {
                     course.setId(courseId);
                     course.setName(resultSet.getString(6));
                     course.setType(CourseType.valueOf(resultSet.getString(7)));
@@ -45,7 +45,7 @@ public class TeacherRSMapper implements ResultSetMapper<Teacher> {
                     courses.add(course);
                 }
             }
-            if(teacher != null) teacher.setCourses(courses);
+            if (teacher != null) teacher.setCourses(courses);
             return teachers;
         } catch (SQLException e) {
             throw new RuntimeException(e);

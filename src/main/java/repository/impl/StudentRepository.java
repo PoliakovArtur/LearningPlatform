@@ -22,19 +22,20 @@ public class StudentRepository implements Repository<Student, Long> {
         builder = new SQLQueryBuilder();
         mapper = new StudentRSMapper();
     }
+
     @Override
     public Optional<Student> findById(Long id) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             builder
                     .selectAll("students")
-                    .join("LEFT","subscriptions", "student_id", "students", "id")
-                    .join("LEFT","courses", "id", "subscriptions", "course_id")
-                    .join("LEFT","teachers", "id", "courses", "teacher_id")
+                    .join("LEFT", "subscriptions", "student_id", "students", "id")
+                    .join("LEFT", "courses", "id", "subscriptions", "course_id")
+                    .join("LEFT", "teachers", "id", "courses", "teacher_id")
                     .where("students.id", id.toString());
             Statement statement = connection.createStatement();
             String query = builder.getQuery();
             ResultSet set = statement.executeQuery(query);
-            return Optional.of(mapper.map(set));
+            return Optional.ofNullable(mapper.map(set));
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
@@ -42,7 +43,7 @@ public class StudentRepository implements Repository<Student, Long> {
 
     @Override
     public boolean deleteById(Long id) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             builder
                     .delete("students")
                     .where("id", id.toString());
@@ -57,7 +58,7 @@ public class StudentRepository implements Repository<Student, Long> {
 
     @Override
     public List<Student> findAll() {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             builder
                     .selectAll("students")
                     .join("LEFT", "subscriptions", "student_id", "students", "id")
@@ -74,7 +75,7 @@ public class StudentRepository implements Repository<Student, Long> {
 
     @Override
     public Student save(Student student) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             String name = student.getName();
             String age = student.getAge().toString();
             String registrationDate = student.getRegistrationDate().toString();
@@ -91,18 +92,18 @@ public class StudentRepository implements Repository<Student, Long> {
 
     @Override
     public Student update(Student student) {
-        try(Connection connection = ConnectionManager.getConnection()) {
+        try (Connection connection = ConnectionManager.getConnection()) {
             String id = student.getId().toString();
             List<String> updatedColumns = new ArrayList<>();
-            if(student.getName() != null) {
+            if (student.getName() != null) {
                 updatedColumns.add("name");
                 updatedColumns.add(student.getName());
             }
-            if(student.getRegistrationDate() != null) {
+            if (student.getRegistrationDate() != null) {
                 updatedColumns.add("registration_date");
                 updatedColumns.add(student.getRegistrationDate().toString());
             }
-            if(student.getAge() != null) {
+            if (student.getAge() != null) {
                 updatedColumns.add("age");
                 updatedColumns.add(student.getAge().toString());
             }

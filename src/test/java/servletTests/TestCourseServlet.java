@@ -1,6 +1,6 @@
 package servletTests;
 
-import db.Data;
+import db.Entities;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,16 +14,14 @@ import org.junit.jupiter.api.Test;
 import service.impl.CourseService;
 import service.impl.TeacherService;
 import servlets.CoursesServlet;
-
 import java.io.*;
 import java.util.List;
 import java.util.stream.Stream;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class TestCourseServlet {
-    private final static List<Course> courses = Data.getCourses();
+    private final static List<Course> courses = Entities.getCourses();
     private static CourseService courseService;
     private static TeacherService teacherService;
     private static CoursesServlet coursesServlet;
@@ -52,7 +50,7 @@ public class TestCourseServlet {
 
     @Test
     public void testGet() throws IOException {
-        for(Course course : courses) {
+        for (Course course : courses) {
             when(response.getWriter()).thenReturn(new PrintWriter(RESPONSE_PATH));
             Long id = course.getId();
             when(courseService.findById(id)).thenReturn(courses.get(id.intValue() - 1));
@@ -63,6 +61,7 @@ public class TestCourseServlet {
             assertEquals(expected, actual);
         }
     }
+
     @Test
     public void testPost() throws IOException, ServletException {
         Teacher teacher = new Teacher();
@@ -93,7 +92,7 @@ public class TestCourseServlet {
 
     @Test
     public void testDelete() throws ServletException, IOException {
-        for(Course course : courses) {
+        for (Course course : courses) {
             Long id = course.getId();
             when(request.getPathInfo()).thenReturn("/" + id);
             coursesServlet.doDelete(request, response);
@@ -104,7 +103,7 @@ public class TestCourseServlet {
     private String getJsonCourses() {
         JSONObject outGoingDTO = new JSONObject();
         JSONArray jsonCourses = new JSONArray();
-        for(Course Course : courses) {
+        for (Course Course : courses) {
             jsonCourses.add(getOutgoingDTO(Course));
         }
         outGoingDTO.put("courses", jsonCourses);

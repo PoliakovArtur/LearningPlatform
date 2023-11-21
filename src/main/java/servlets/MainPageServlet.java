@@ -16,8 +16,8 @@ public class MainPageServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         StringBuilder builder = new StringBuilder();
         String[] files = {"src/main/resources/index.html"};
-        for(String file : files) {
-            try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        for (String file : files) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 reader.lines().forEach(builder::append);
             } catch (Exception ex) {
                 ex.printStackTrace();

@@ -3,9 +3,8 @@ package service.impl;
 import model.Teacher;
 import repository.impl.TeacherRepository;
 import service.Service;
-
 import java.util.List;
-import java.util.Optional;
+
 
 public class TeacherService implements Service<Teacher, Long> {
     private TeacherRepository repository;
@@ -31,7 +30,7 @@ public class TeacherService implements Service<Teacher, Long> {
 
     @Override
     public Teacher save(Teacher teacher) {
-        if(teacher.getName() == null
+        if (teacher.getName() == null
                 || teacher.getAge() == null
                 || teacher.getSalary() == null) {
             throw new ServiceException("not enough columns to save teacher");
@@ -41,8 +40,8 @@ public class TeacherService implements Service<Teacher, Long> {
 
     @Override
     public Teacher update(Teacher teacher) {
-        if(teacher.getId() == null) throw new ServiceException("need to set id to update teacher");
-        if(teacher.getName() == null
+        if (teacher.getId() == null) throw new ServiceException("need to set id to update teacher");
+        if (teacher.getName() == null
                 && teacher.getAge() == null
                 && teacher.getSalary() == null) {
             throw new ServiceException("need to set at least one column to update teacher");

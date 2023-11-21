@@ -23,8 +23,8 @@ public class CourseRSMapper implements ResultSetMapper<Course> {
             Long prevId = -1L;
             while (resultSet.next()) {
                 Long id = resultSet.getLong(5); // skip teacher columns
-                if(prevId < id) {
-                    if(course != null) course.setStudents(students);
+                if (prevId < id) {
+                    if (course != null) course.setStudents(students);
                     students = new ArrayList<>();
                     Teacher teacher = new Teacher();
                     teacher.setId(resultSet.getLong(1));
@@ -42,7 +42,7 @@ public class CourseRSMapper implements ResultSetMapper<Course> {
                     prevId = id;
                 }
                 long studentId = resultSet.getLong(14); // skip subscriptions columns
-                if(studentId > 0) {
+                if (studentId > 0) {
                     Student student = new Student();
                     student.setId(studentId);
                     student.setName(resultSet.getString(15));
@@ -51,7 +51,7 @@ public class CourseRSMapper implements ResultSetMapper<Course> {
                     students.add(student);
                 }
             }
-            if(course != null) course.setStudents(students);
+            if (course != null) course.setStudents(students);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

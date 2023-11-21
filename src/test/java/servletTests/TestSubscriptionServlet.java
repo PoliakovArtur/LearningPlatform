@@ -1,6 +1,6 @@
 package servletTests;
 
-import db.Data;
+import db.Entities;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class TestSubscriptionServlet {
-    private final static List<Subscription> subscriptions = Data.getSubscriptions();
+    private final static List<Subscription> subscriptions = Entities.getSubscriptions();
     private static SubscriptionService SubscriptionService;
     private static SubscriptionsServlet SubscriptionsServlet;
     private static HttpServletRequest request;
@@ -47,8 +47,10 @@ public class TestSubscriptionServlet {
 
     @Test
     public void testPost() throws IOException, ServletException {
-        Student student = new Student(); student.setId(2L);
-        Course course = new Course(); course.setId(4L);
+        Student student = new Student();
+        student.setId(2L);
+        Course course = new Course();
+        course.setId(4L);
         Subscription subscription = new Subscription(student, course, Date.valueOf("2022-10-10"));
         String jsonObject = getIncomingDTO(subscription).toJSONString();
         when(request.getPathInfo()).thenReturn("/");
@@ -62,7 +64,7 @@ public class TestSubscriptionServlet {
     private String getJsonSubscriptions() {
         JSONObject outGoingDTO = new JSONObject();
         JSONArray jsonSubscriptions = new JSONArray();
-        for(Subscription subscription : subscriptions) {
+        for (Subscription subscription : subscriptions) {
             jsonSubscriptions.add(getOutGoingDTO(subscription));
         }
         outGoingDTO.put("subscriptions", jsonSubscriptions);
